@@ -21,9 +21,8 @@ export async function POST(request: NextRequest) {
 
     // Convert response to text and log it
     const fileContent = await response.text();
-    // wait 10 seconds
-    await new Promise((resolve) => setTimeout(resolve, 10000));
-    // Delete file in background
+
+    //
     del(filepath).catch((error) => {
       console.error("Failed to delete file:", error);
     });
