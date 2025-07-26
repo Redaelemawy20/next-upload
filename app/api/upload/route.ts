@@ -1,26 +1,42 @@
 import { NextRequest, NextResponse } from "next/server";
+import { del } from "@vercel/blob";
 
-export async function POST(req: NextRequest) {
-  const formData = await req.formData();
-  const file = formData.get("file") as File | null;
+export async function POST(request: NextRequest) {
+  try {
+    const { filepath } = await request.json();
 
-  if (!file) {
+    if (!filepath) {
+      return NextResponse.json(
+        { error: "Filepath is required" },
+        { status: 400 }
+      );
+    }
+
+    // Download file from Vercel Blob using fetch
+    const response = await fetch(filepath);
+
+    if (!response.ok) {
+      return NextResponse.json({ error: "File not found" }, { status: 404 });
+    }
+
+    // Convert response to text and log it
+    const fileContent = await response.text();
+    // wait 10 seconds
+    await new Promise((resolve) => setTimeout(resolve, 10000));
+    // Delete file in background
+    del(filepath).catch((error) => {
+      console.error("Failed to delete file:", error);
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "File downloaded and logged successfully",
+    });
+  } catch (error) {
+    console.error("Error processing file:", error);
     return NextResponse.json(
-      { success: false, message: "No file provided" },
-      { status: 400 }
+      { error: "Internal server error" },
+      { status: 500 }
     );
   }
-
-  // Log file information
-  console.log("File uploaded:", {
-    name: file.name,
-    size: file.size,
-    type: file.type,
-    lastModified: new Date(file.lastModified).toISOString(),
-  });
-
-  return NextResponse.json({
-    success: true,
-    message: "File uploaded successfully!",
-  });
 }
