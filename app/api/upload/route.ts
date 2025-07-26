@@ -21,7 +21,8 @@ export async function POST(request: NextRequest) {
 
     // Convert response to text and log it
     const fileContent = await response.text();
-
+    // wait 5 seconds
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     // don't do it in the background
     await del(filepath);
 
