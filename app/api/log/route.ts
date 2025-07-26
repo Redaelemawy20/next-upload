@@ -9,12 +9,16 @@ export async function POST(request: Request): Promise<NextResponse> {
       body,
       request,
       onBeforeGenerateToken: async (
-        pathname
+        pathname,
+        clientPayload
         /* clientPayload */
       ) => {
         // Generate a client token for the browser to upload the file
         // ⚠️ Authenticate and authorize users before generating the token.
         // Otherwise, you're allowing anonymous uploads.
+        console.log("clientPayload", JSON.parse(clientPayload as string));
+        const payload = JSON.parse(clientPayload as string);
+        console.log(payload.userId);
 
         return {
           allowedContentTypes: [

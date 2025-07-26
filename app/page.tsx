@@ -24,6 +24,9 @@ export default function AvatarUploadPage() {
           const newBlob = await upload(file.name, file, {
             access: "public",
             handleUploadUrl: "/api/log",
+            clientPayload: JSON.stringify({
+              userId: "123",
+            }),
           });
 
           // Call the upload route to download, log, and delete the file
