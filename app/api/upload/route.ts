@@ -22,10 +22,8 @@ export async function POST(request: NextRequest) {
     // Convert response to text and log it
     const fileContent = await response.text();
 
-    //
-    del(filepath).catch((error) => {
-      console.error("Failed to delete file:", error);
-    });
+    // don't do it in the background
+    await del(filepath);
 
     return NextResponse.json({
       success: true,
