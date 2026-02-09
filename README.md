@@ -38,6 +38,7 @@ pnpm dev
 - Progress feedback
 - Error handling
 - File logging
+- Test
 
 ## Environment Variables
 
